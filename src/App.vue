@@ -1,7 +1,7 @@
 <template>
-  <div class="container">
+  <div class="container" :user="currentUser">
     <!-- 头部区域 -->
-    <GolderHeader :user="user" />
+    <GlobarHeader />
     <!-- 路由跳转区 -->
     <router-view></router-view>
     <!-- 底部区域 -->
@@ -19,23 +19,23 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent} from "vue";
+import { defineComponent, computed } from "vue";
+
 import "bootstrap/dist/css/bootstrap.min.css";
-import GolderHeader, { UserProps } from "./components/GlobarHeader.vue";
-const currentUser: UserProps = {
-  isLogin: false,
-  name: "josey",
-  id: 1,
-};
+import GlobarHeader from "./components/GlobarHeader.vue";
+import { useStore } from "vuex";
 export default defineComponent({
   name: "App",
-  setup() { 
+  setup() {
+    const store = useStore();
+    console.log(store.state.user);
+    const currentUser = computed(() => store.state.user);
     return {
-      user: currentUser,
+      currentUser,
     };
   },
   components: {
-    GolderHeader,
+    GlobarHeader,
   },
 });
 </script>

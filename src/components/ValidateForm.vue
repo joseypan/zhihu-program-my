@@ -8,23 +8,29 @@
     </div>
   </form>
 </template>
-<script>
+<script lang="ts">
 import { defineComponent, onUnmounted } from "vue";
-import mitt, { Handler } from "mitt";
-export const emitter = mitt();
+import mitt from "mitt";
+type validateFunc =()=>boolean
+export const emitterTool = mitt();
 export default defineComponent({
   name: "ValidateForm",
   emits: ["form-submit"],
   setup(props, context) {
+    const funcArr:validateFunc[]=[];
     const submitForm = () => {
-      context.emit("form-submit", true);
+      // 调用funcArr中的方法判断是否都为true
+      let validateResult=funcArr.map(func=>func()).every(result=>result)
+      context.emit("form-submit", validateResult);
     };
-    const callback = (test) => {
-      console.log(test);
+    const callback = (func?:validateFunc) => {
+      if(func){
+        funcArr.push(func);
+      }
     };
-    emitter.on('form-item-created', callback);
+    emitterTool.on("form-item-created", callback);
     onUnmounted(() => {
-      emitter.off("form-item-created", callback);
+      emitterTool.off("form-item-created", callback);
     });
     return {
       submitForm,

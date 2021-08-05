@@ -21,7 +21,7 @@
       </div>
     </template>
     <template #submit>
-      <button type="submit" class="btn btn-primary">Submit</button>
+      <button type="submit" class="btn btn-primary">登录</button>
     </template>
   </ValidateForm>
 </template>
@@ -53,10 +53,9 @@ export default defineComponent({
     const emailVal: Ref<string> = ref("123@test.com");
     const passwordVal: Ref<string> = ref("123");
     const router = useRouter();
-console.log(router)
     const onFormSubmit = (isSubmit: boolean): void => {
       if (isSubmit) {
-        router.push("/home");
+        router.push("/");
       }
     };
     return {
