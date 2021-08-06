@@ -7,12 +7,14 @@ export interface UserProps {
 export default createStore({
   state: {
     user: {
-      isLogin: false,
-      name: "josey",
-      id: 1,
+      isLogin: false
     },
   },
-  mutations: {},
+  mutations: {
+    setUserData(state,data){
+      state.user={isLogin:true,...data}
+    }
+  },
   actions: {},
   modules: {},
 });

@@ -1,7 +1,7 @@
 <template>
   <div class="register-container">
     <h4>注册者也账户</h4>
-    <validate-form>
+    <validate-form @form-submit="signup">
       <div class="mb-3">
         <label for="exampleInputEmail1" class="form-label">邮箱地址</label>
         <ValidateInput
@@ -47,17 +47,20 @@
 </template>
 <script lang="ts">
 import { defineComponent, reactive } from "vue";
+import { useRouter } from "vue-router";
 import ValidateForm from "../components/ValidateForm.vue";
 import ValidateInput from "../components/ValidateInput.vue";
-
+import { registerApi } from "../request/api";
+import request from "../request/request";
 export default defineComponent({
   name: "Register",
   setup(props, context) {
+    const router = useRouter();
     const registerFormData = reactive({
-      email: "",
-      nickName: "",
-      password: "",
-      repeatPassword: "",
+      email: "123@qq.com",
+      nickName: "123",
+      password: "123456",
+      repeatPassword: "123456",
     });
     const emailRules = [
       { type: "required", message: "电子邮箱地址不能为空" },
@@ -75,12 +78,23 @@ export default defineComponent({
         },
       },
     ];
+    const signup = async (isSubmit: boolean): Promise<void> => {
+      if (isSubmit) {
+        await request({
+          method: "post",
+          url: registerApi,
+          data: registerFormData,
+        });
+        router.push("/login");
+      }
+    };
     return {
       emailRules,
       nicknameRules,
       registerFormData,
       passworldRules,
       repeatPasswordRules,
+      signup,
     };
   },
   components: {

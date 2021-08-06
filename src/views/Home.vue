@@ -16,11 +16,11 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, onMounted, reactive, ref } from "vue";
 import { useRouter } from "vue-router";
 import ColumnList from "../components/ColumnList.vue";
-import { columnListData } from "../testData";
-
+import request from "../request/request";
+import { getPageDataApi } from "@/request/api";
 export default defineComponent({
   name: "Home",
   setup(props) {
@@ -32,6 +32,19 @@ export default defineComponent({
     const startWriting = (): void => {
       router.push("/createPoem");
     };
+    let currentPage = ref(1);
+    let pageSize = ref(6);
+    let columnListData = ref([]);
+    const getPageData = async (): Promise<void> => {
+      let res = await request({
+        url: `${getPageDataApi}?currentPage=${currentPage.value}&pageSize=${pageSize.value}`,
+      });
+      columnListData.value = res.list;
+    };
+    onMounted(() => {
+      getPageData();
+      console.log(columnListData)
+    });
     return {
       list: columnListData,
       startWriting,

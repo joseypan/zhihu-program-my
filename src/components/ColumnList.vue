@@ -3,7 +3,7 @@
     <div v-for="column in columnList" :key="column.id" class="col-4 mb-4">
       <div class="card shadow-sm" style="width: 18rem">
         <img
-          :src="column.avatar"
+          :src="column.avatar && column.avatar.fitUrl"
           :alt="column.title"
           class="rounded-circle border border-light w-25 my-3"
         />

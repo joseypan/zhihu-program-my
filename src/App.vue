@@ -1,7 +1,7 @@
 <template>
-  <div class="container" :user="currentUser">
+  <div class="container">
     <!-- 头部区域 -->
-    <GlobarHeader />
+    <GlobarHeader :user="currentUser" />
     <!-- 路由跳转区 -->
     <router-view></router-view>
     <!-- 底部区域 -->
@@ -20,15 +20,28 @@
 </template>
 <script lang="ts">
 import { defineComponent, computed } from "vue";
-
 import "bootstrap/dist/css/bootstrap.min.css";
 import GlobarHeader from "./components/GlobarHeader.vue";
 import { useStore } from "vuex";
+import { currentUserApi } from "@/request/api";
+import request from "@/request/request";
 export default defineComponent({
   name: "App",
   setup() {
     const store = useStore();
-    console.log(store.state.user);
+    if (sessionStorage.getItem("authorization")) {
+      const getUserData = async (): Promise<void> => {
+        // 获取用户信息
+        let currentUserData = await request({
+          url: currentUserApi,
+        });
+        if (currentUserData) {
+          // 将个人信息存储到vuex中
+          store.commit("setUserData", currentUserData);
+        }
+      };
+      getUserData();
+    }
     const currentUser = computed(() => store.state.user);
     return {
       currentUser,

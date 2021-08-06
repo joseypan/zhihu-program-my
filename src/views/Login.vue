@@ -30,6 +30,10 @@ import { defineComponent, ref, Ref } from "vue";
 import ValidateInput, { RulesProp } from "../components/ValidateInput.vue";
 import ValidateForm from "../components/ValidateForm.vue";
 import { useRouter } from "vue-router";
+import { useStore } from "vuex";
+import request from "../request/request";
+import { loginApi, currentUserApi } from "../request/api";
+import createMessage from "../components/createMessage";
 const emailRules: RulesProp = [
   {
     type: "required",
@@ -53,9 +57,29 @@ export default defineComponent({
     const emailVal: Ref<string> = ref("123@test.com");
     const passwordVal: Ref<string> = ref("123");
     const router = useRouter();
-    const onFormSubmit = (isSubmit: boolean): void => {
+    const store = useStore();
+    const onFormSubmit = async (isSubmit: boolean): Promise<void> => {
       if (isSubmit) {
-        router.push("/");
+        // 调登录接口
+        let res = await request({
+          url: loginApi,
+          method: "post",
+          data: {
+            email: emailVal.value,
+            password: passwordVal.value,
+          },
+        });
+        sessionStorage.setItem("authorization", `Bearer ${res.token}`);
+        // 获取用户信息
+        let currentUserData = await request({
+          url: currentUserApi,
+        });
+        // 将个人信息存储到vuex中
+        store.commit("setUserData", currentUserData);
+        createMessage("登录成功,2秒之后跳转", "success");
+        setTimeout(() => {
+          router.push("/");
+        }, 2000);
       }
     };
     return {
