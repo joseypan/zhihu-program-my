@@ -1,7 +1,11 @@
 <template>
   <div class="create-poem">
     <h4>编辑文章</h4>
-    <h2>点击上传头图</h2>
+    <uploader :beforeUpload="validateFile">
+      <template #uploadArea>
+        <h2>点击上传头图</h2>
+      </template>
+    </uploader>
     <validate-form>
       <div class="mb-3">
         <label class="form-label">文章标题：</label>
@@ -23,42 +27,57 @@
         />
       </div>
       <template v-slot:submit>
-         <button class="btn btn-primary btn-large">发表文章</button>
+        <button class="btn btn-primary btn-large">发表文章</button>
       </template>
     </validate-form>
   </div>
 </template>
 <script lang="ts">
-import { defineComponent,ref } from "vue";
-import ValidateInput,{RulesProp} from "../components/ValidateInput.vue"
+import { defineComponent, ref } from "vue";
+import ValidateInput, { RulesProp } from "../components/ValidateInput.vue";
 import validateForm from "../components/ValidateForm.vue";
+import Uploader from "@/components/Uploader.vue";
 export default defineComponent({
   name: "CreatePeom",
-  setup(props,context){
+  setup(props, context) {
     const titleVal = ref("");
-    const contentVal= ref("")
-    const titleRules:RulesProp=[
+    const contentVal = ref("");
+    const titleRules: RulesProp = [
       {
-        type:'required',
-        message:'文章标题不能为空'
-      }
-    ]
-    const contentRules:RulesProp=[
+        type: "required",
+        message: "文章标题不能为空",
+      },
+    ];
+    const contentRules: RulesProp = [
       {
-        type:'required',
-        message:'文章内容不能为空'
+        type: "required",
+        message: "文章内容不能为空",
+      },
+    ];
+    const validateFile = (file: File): boolean => {
+      const { name, size, type } = file;
+      console.log(name, size, type);
+      if (type !== "image/jpeg") {
+        console.log("类型不正确");
+        return false;
+      } else if (size > 1024 * 1024) {
+        console.log("大小超过1M");
+        return false;
       }
-    ]
-    return{
+      return true;
+    };
+    return {
       titleVal,
       contentVal,
       titleRules,
-      contentRules
-    }
+      contentRules,
+      validateFile,
+    };
   },
   components: {
     validateForm,
-    ValidateInput
+    ValidateInput,
+    Uploader,
   },
 });
 </script>
