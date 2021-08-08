@@ -7,6 +7,7 @@
  */
 import { createApp } from "vue";
 import Message from "./Message.vue";
+import {createNode} from '@/hooks/useCreateNode';
 export type MessageType = "success" | "info" | "warning" | "danger";
 const createMessage = (message: string, type: MessageType, timeout = 2000) => {
   const messageInstance = createApp(Message, {
@@ -15,8 +16,7 @@ const createMessage = (message: string, type: MessageType, timeout = 2000) => {
       text: message,
     },
   });
-  const mountNode = document.createElement("div");
-  document.body.appendChild(mountNode);
+  const mountNode = createNode("message");
   messageInstance.mount(mountNode);
   setTimeout(() => {
     messageInstance.unmount();

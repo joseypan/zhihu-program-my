@@ -1,5 +1,6 @@
 <template>
   <div class="container">
+    <Loader v-if="isLoading" bgColor="rgba(0,0,0,0.5)" text="拼命加载中..." />
     <!-- 头部区域 -->
     <GlobarHeader :user="currentUser" />
     <!-- 路由跳转区 -->
@@ -25,6 +26,7 @@ import GlobarHeader from "./components/GlobarHeader.vue";
 import { useStore } from "vuex";
 import { currentUserApi } from "@/request/api";
 import request from "@/request/request";
+import Loader from "@/components/Loader.vue";
 export default defineComponent({
   name: "App",
   setup() {
@@ -43,12 +45,15 @@ export default defineComponent({
       getUserData();
     }
     const currentUser = computed(() => store.state.user);
+    const isLoading = computed(() => store.state.isLoading);
     return {
       currentUser,
+      isLoading,
     };
   },
   components: {
     GlobarHeader,
+    Loader,
   },
 });
 </script>

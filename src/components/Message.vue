@@ -6,15 +6,17 @@
 * @LastEditTime: 2021-08-06 14:17
  -->
 <template>
-  <div class="message">
-    <div
-      class="alert fixed-top w-50 mx-auto d-flex justify-content-between mt-2"
-      :class="messageTypeClass"
-      role="alert"
-    >
-      {{ messageData.text }}
+  <teleport to="#message">
+    <div class="message">
+      <div
+        class="alert fixed-top w-50 mx-auto d-flex justify-content-between mt-2"
+        :class="messageTypeClass"
+        role="alert"
+      >
+        {{ messageData.text }}
+      </div>
     </div>
-  </div>
+  </teleport>
 </template>
 <script lang="ts">
 import { computed, defineComponent, PropType } from "vue";
